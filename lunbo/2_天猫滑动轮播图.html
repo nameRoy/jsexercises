@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #container{
+            position: relative;
+            height: 500px;
+            width: 1130px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        #imgbox{
+            width: 10000px;
+            transition: margin-left 1s ease;
+        }
+        #imgbox img{
+            float: left;
+        }
+        
+        #num{
+            position: absolute;
+            bottom: 25px;
+            left:50%;
+            transform: translateX(-50%);
+        }
+        #num li{
+            float: left;
+            width: 25px;
+            height: 5px;
+            background: rgba(0,0,0,0.3);
+            margin-right: 5px;
+            cursor: pointer;
+            list-style: none;
+        }
+        #num .select{
+            background: rgba(255,255,255,0.5);
+        }
+        #left,#right{
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: rgba(0,0,0,0.3);
+            color: rgba(255,255,255,0.5);
+            font-size: 50px;
+            font-weight: 700;
+            line-height: 100px;
+            text-align: center;
+            left: 50%;
+            top: 50%;
+            margin-top: -50px;
+            margin-left: -50px;
+            cursor: pointer;
+        }
+        #left{
+            transform: translateX(-515px);
+        }
+        #right{
+            transform: translateX(515px);
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="imgbox">
+            <img src="img1.jpg" alt="">
+            <img src="img2.jpg" alt="">
+            <img src="img3.jpg" alt="">
+            <img src="img4.jpg" alt="">
+            <img src="img5.jpg" alt="">
+        </div>
+        
+        <ul id="num">
+            <li class="select"></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+
+        <div id="left">&lt;</div>
+        <div id="right">&gt;</div>
+    </div>
+    
+    <script>
+        var oContainer = document.getElementById("container");
+        var oImgbox = document.getElementById("imgbox");
+        var aImg = oImgbox.getElementsByTagName("img");
+        var aLi = document.getElementById("num").getElementsByTagName("li");
+        var oLeft = document.getElementById("left");
+        var oRight = document.getElementById("right");
+
+        var indexNow = 0;
+        
+        for(var i = 0;i<aLi.length;i++){
+            aLi[i].index = i;
+            aLi[i].onmouseover = function(){
+                indexNow = this.index;
+                change(indexNow);
+            }
+        }
+
+        oLeft.onclick = function(){
+            indexNow--;
+            if(indexNow==-1){
+                indexNow = aLi.length-1;
+            }
+            change(indexNow);
+        }
+
+        oRight.onclick = function(){
+            indexNow++;
+            if(indexNow==aLi.length){
+                indexNow = 0;
+            }
+            change(indexNow);
+        }
+        function change(a){
+            var b = 0;
+            var nMarginleft = 0;
+            for(var i = 0;i<aLi.length;i++){
+                aLi[i].className = "";
+                aImg[i].className = "";
+            }
+            aLi[a].className = "select";
+            for(var j = 0;j<a;j++){
+                b+=aImg[j].width;
+                nMarginleft = b;
+            }
+            oImgbox.style.marginLeft = -nMarginleft+"px";
+        }
+
+        var timer;
+        function run(){
+            timer = setInterval(function(){
+                oRight.onclick();
+            },1000)
+        }
+        run();
+        oContainer.onmouseover = function(){
+            clearInterval(timer);
+        }
+        oContainer.onmouseout = function(){
+            run();
+        }
+    </script>
+</body>
+</html>
