@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+    #move{
+        width: 200px;
+        height: 200px;
+        background: #ff0000;
+        position: absolute;
+    }
+</style>
+<body>
+    <div id="move"></div>
+    <script>
+        var oMove = document.getElementById("move");
+        oMove.onmousedown = function(e){
+            var x = e.clientX-oMove.offsetLeft;
+            var y = e.clientY-oMove.offsetTop;
+            document.onmousemove = function(e){
+                oMove.style.left = e.clientX-x+"px";
+                oMove.style.top = e.clientY-y+"px";
+            }
+        }
+        oMove.onmouseup = function(){
+            document.onmousemove = null;
+        }
+    </script>
+</body>
+</html>
