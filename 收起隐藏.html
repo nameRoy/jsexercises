@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+    }
+    #h1,#h2{
+        width: 160px;
+        height: 40px;
+        background: #000000;
+        color: #fff;
+        margin: 0;
+    }
+    #h1sub,#h2sub{
+        border: solid #000;
+        border-width: 0 1px 0 1px;
+        width: 158px;
+        display: none;
+    }
+    #h2sub{
+        border-width: 0 1px 1px 1px;
+    }
+    li{
+        list-style: none;
+        height: 40px;
+       
+    }
+</style>
+<body>
+    <h1 id="h1">管理区</h1>
+    <ul id="h1sub">
+        <li>001</li>
+        <li>002</li>
+        <li>003</li>
+    </ul>
+    <h1 id="h2">交流区</h1>
+    <ul id="h2sub">
+        <li>001</li>
+        <li>002</li>
+        <li>003</li>
+    </ul>
+    <script>
+        var aH1 = document.getElementsByTagName("h1");
+        var aUl = document.getElementsByTagName("ul");
+        /* for(var i = 0;i<aH1.length;i++){
+            aH1[i].index = i;
+            aH1[i].onclick = function(){
+                var ul = aUl[this.index];
+                if(ul.style.display==""||ul.style.display=="none"){
+                    ul.style.display="block";
+                }else{
+                    ul.style.display="none";
+                }
+            }
+        } */
+        for(var i = 0;i<aH1.length;i++){
+            aH1[i].index = i;
+            aH1[i].flag = true;
+            aH1[i].onclick = function(){
+                var ul = aUl[this.index];
+                if(this.flag){
+                    ul.style.display = "block";
+                }else{
+                    ul.style.display = "none";
+                }
+                this.flag = !this.flag;
+            }
+        }
+    </script>
+</body>
+</html>
