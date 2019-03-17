@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <ul id="ul">
+        <li>01</li>
+        <li>02</li>
+        <li>03</li>
+        <li>04</li>
+        <li>05</li>
+    </ul>
+    <script>
+        var oUl = document.getElementById("ul");
+        var aLi = oUl.getElementsByTagName("li");
+        var b = true;
+        var pre = 0, next;
+        for (var i = 0; i < aLi.length; i++) {
+            (function (i) {
+                aLi[i].onclick = function () {
+                    next = i;
+                    if (pre == next - 1 || pre == next + 1||(next==aLi.length-1&&pre==0)||(next==0&&pre==aLi.length-1)) {
+                        console.log("相邻");
+                    } else if(next == pre){
+                        console.log("没变化");
+                    }
+                    else{
+                        console.log("跳");
+                    }
+                    pre = next;
+                }
+            })(i)
+        }
+    </script>
+</body>
+
+</html>
