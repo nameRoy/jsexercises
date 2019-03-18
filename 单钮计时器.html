@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+    #clock {
+        width: 100px;
+        height: 100px;
+        background: #cccccc;
+        text-align: center;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+    }
+</style>
+
+<body>
+    <div id="clock">
+        <p id="word">还有___s</p>
+        <input type="button" id="btn" value="开始">
+    </div>
+    <script>
+        function jishi() {
+            var oClock = document.getElementById("clock");
+            var oWord = document.getElementById("word");
+            var num = parseInt(window.prompt("请输入你要倒计时的秒数（只支持正整数）"));
+            var oBtn = document.getElementById("btn");
+            var timer;
+
+            oBtn.onclick = function () {
+                if (oBtn.value == "开始") {
+                    oBtn.value = "暂停";
+                    timer = setInterval(function () {
+                        oWord.innerHTML = "还有" + num + "s";
+                        num--;
+                        if (num < 0) {
+                            console.log(num);
+                            clearInterval(timer);
+                            oBtn.value = "开始";
+                            var bool = confirm("点击确定重新开始点击取消结束）");
+                            if(bool){
+                                jishi();
+                            }
+                        }
+                    }, 1000)
+                    console.log(oBtn.value);
+                } else if (oBtn.value == "暂停") {
+                    clearInterval(timer);
+                    oBtn.value = "开始";
+                } 
+            }
+        }
+        jishi();
+    </script>
+</body>
+
+</html>
