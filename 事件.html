@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <button id="btn">添加</button>
+    <ul id="par">
+        <li>01</li>
+        <li>02</li>
+        <li>03</li>
+    </ul>
+    
+    <script>
+        var oPar = document.getElementById("par");
+        var aLi = oPar.getElementsByTagName("li");
+        var oBtn = document.getElementById("btn");
+        oBtn.onclick = function(){
+            var appnode = document.createElement("li");
+            appnode.innerHTML = (Math.round(100*Math.random()))/100;
+            oPar.appendChild(appnode);
+        }
+        oPar.onclick = function(e){
+            e = e||window.event;
+            if(e.target.nodeName == "LI"){
+                console.log(e.target.innerHTML)
+            }
+        }
+    </script>
+</body>
+</html>
