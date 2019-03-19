@@ -18,7 +18,7 @@
         bottom: 0;
         left: 0;
         right: 0;
-        margin: auto;
+        margin: 300px auto;
     }
 </style>
 
@@ -39,16 +39,20 @@
                 if (oBtn.value == "开始") {
                     oBtn.value = "暂停";
                     timer = setInterval(function () {
+                        console.log(num)
                         oWord.innerHTML = "还有" + num + "s";
                         num--;
                         if (num < 0) {
                             console.log(num);
                             clearInterval(timer);
                             oBtn.value = "开始";
-                            var bool = confirm("点击确定重新开始点击取消结束）");
-                            if(bool){
-                                jishi();
-                            }
+                            setTimeout(function(){
+                               var bool = confirm("点击确定重新开始点击取消结束）");
+                if(bool){
+                                                jishi();
+                                            }
+                            }, 0);
+                            
                         }
                     }, 1000)
                     console.log(oBtn.value);
