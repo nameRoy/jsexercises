@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #div{
+            position: fixed;
+            top: -200px;
+            width: 100%;
+        }
+        body{
+            height: 2000px;
+        }
+        #left{
+            width: 46px;
+            height: 460px;
+            position: fixed;
+            left: 107px;
+            bottom: 62px;
+            background: #ff0000;
+            transform-origin: 0 100%;
+            transform: scale(0);
+        }
+    </style>
+</head>
+<body>
+    <div id="div" style="background:red;height:200px"></div>
+    <div id="left"></div>
+    <script>
+        var oBody = document.body
+        var oDiv = document.getElementById("div");
+        var oLeft = document.getElementById("left");
+
+        window.onscroll = function(){
+            if(document.documentElement.scrollTop>=500){
+                oDiv.style.top = 0;
+                oDiv.style.transition = "all 0.5s ease";
+                oLeft.style.transform = "scale(1)";
+                oLeft.style.transition = "all 0.5s ease"
+            }else{
+                oDiv.style.top = -200+"px";
+                oDiv.style.transition = "all 0.5s ease";
+                oLeft.style.transform = "scale(0)";
+                oLeft.style.transition = "all 0.5s ease"
+            }
+        }
+    </script>
+</body>
+</html>
