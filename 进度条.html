@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #div1 {
+            width: 500px;
+            height: 20px;
+            border: 1px solid #000;
+            text-align: center;
+            position: relative;
+        }
+
+        #son {
+            position: absolute;
+            height: 20px;
+            background: #00ff00;
+            z-index: -1;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="div1">
+        <div id="son"></div>
+    </div>
+    <button id="btn">开始</button>
+    <button id="pause">暂停</button>
+    <button id="reset">重置</button>
+    <script>
+        var oDiv1 = document.getElementById("div1");
+        var oSon = document.getElementById("son");
+        var oSpan = document.createElement("span");
+        var oBtn = document.getElementById("btn");
+        var oPause = document.getElementById("pause");
+        var oReset = document.getElementById("reset");
+        oSpan.innerHTML = "0%"
+        oDiv1.appendChild(oSpan);
+        oBtn.onclick = function () {
+            clearInterval(oBtn.timer);
+            var oSonWidth = oSon.offsetWidth;
+            var oDiv1Width = oDiv1.offsetWidth;
+            function setWidth(){
+                var dvalue = -oSonWidth + oDiv1Width;
+                var move = dvalue/10;
+                if(move<=5){
+                    move = 5;
+                }
+                oSonWidth += move;
+                if(oSonWidth>=oDiv1Width){
+                    oSpan.innerHTML = "100%"
+                    oSonWidth = oDiv1Width;
+                    clearInterval(oBtn.timer);
+                } 
+                oSon.style.width = oSonWidth + "px";
+                oSpan.innerHTML = Math.round(oSonWidth/oDiv1Width*10000)/100 + "%";
+            }
+            oBtn.timer = setInterval(setWidth,100)
+        }
+        oPause.onclick = function(){
+            clearInterval(oBtn.timer);
+        }
+        oReset.onclick = function(){
+            clearInterval(oBtn.timer);
+            oSon.style.width = 0+"px";
+            oSpan.innerHTML = "0%";
+        }
+    </script>
+</body>
+
+</html>
