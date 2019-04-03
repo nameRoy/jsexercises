@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #container {
+            position: relative;
+            height: 500px;
+            width: 1130px;
+            margin: 0 auto;
+            /* overflow: hidden; */
+        }
+
+        #imgbox {
+            width: 10000px;
+            position: absolute;
+            /* transition: all 1s ease; */
+        }
+
+        #imgbox img {
+            float: left;
+        }
+
+        #num {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        #num li {
+            float: left;
+            width: 25px;
+            height: 5px;
+            background: rgba(0, 0, 0, 0.3);
+            margin-right: 5px;
+            cursor: pointer;
+            list-style: none;
+        }
+
+        #num .select {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        #left,
+        #right {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: rgba(0, 0, 0, 0.3);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 50px;
+            font-weight: 700;
+            line-height: 100px;
+            text-align: center;
+            left: 50%;
+            top: 50%;
+            margin-top: -50px;
+            margin-left: -50px;
+            cursor: pointer;
+        }
+
+        #left {
+            transform: translateX(-515px);
+        }
+
+        #right {
+            transform: translateX(515px);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div id="imgbox" style="transition:all 1s ease; left:0;">
+            <img src="img1.jpg" alt="">
+            <img src="img2.jpg" alt="">
+            <img src="img3.jpg" alt="">
+            <img src="img4.jpg" alt="">
+            <img src="img5.jpg" alt="">
+        </div>
+
+        <ul id="num">
+            <li class="select"></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+
+        <div id="left">&lt;</div>
+        <div id="right">&gt;</div>
+    </div>
+
+    <script>
+        var oImgbox = document.getElementById("imgbox");  //获取要移动的图片盒子
+        oImgbox.appendChild(oImgbox.firstElementChild.cloneNode(true));  //动态复制第一个图片达到无缝轮播
+        var oNum = document.getElementById("num");  
+        var aLi = oNum.getElementsByTagName("li");    //获取下面的选项点
+        var aImg = oImgbox.getElementsByTagName("img");   //获取图片组
+        var oLeft = document.getElementById("left");   // 获取向前的按钮
+        var oRight = document.getElementById("right");  //获取向后的按钮
+        var iNow = 0;   //设置默认当前索引0
+        var move = 0;   //图片盒子应该移动的值，初始为零
+        for (var i = 0; i < aLi.length; i++) {
+            aLi[i].index = i;   
+            aLi[i].onmouseover = function () {   //给每个选项点绑定事件
+                iNow = this.index;    //获取当前索引
+                change(iNow);    //调用改变位置函数
+            }
+        }
+        oLeft.onclick = function(){    //向前按钮绑定点击事件
+            iNow--;
+            if(iNow == -1){   //当零时点击向前变为-1临界改变
+                oImgbox.style.transition = "none";   //清除过渡属性
+                move = getMovelength(aImg.length-1);
+                oImgbox.style.left = -move + "px";
+                setTimeout(function(){    //设置立即调用定时器，目的是避免未清除过渡属性，而直接执行，这样保证了清除过渡属性
+                    iNow = aLi.length-1;
+                    oImgbox.style.transition = "all 1s ease";
+                    change(iNow);
+                },0)   
+            }else{
+                change(iNow);
+            }
+        }
+        oRight.onclick = function(){   //同上
+            iNow++;
+            if(iNow == aImg.length){
+                oImgbox.style.transition = "none";
+                oImgbox.style.left = 0 + "px";
+                clearTimeout(oImgbox.timer);
+                oImgbox.timer = setTimeout(function(){   //设置立即调用定时器，目的是避免未清除过渡属性而直接执行，这样保证了清除过渡属性
+                    iNow = 1;
+                    oImgbox.style.transition = "all 1s ease";
+                    change(iNow);
+                },0)
+            }else{
+                change(iNow);
+            }
+        }
+        function change(iNow) {   //改变图片盒子位置的函数设置
+            for (var i = 0; i < aLi.length; i++) {
+                aLi[i].className = "";   //上来给所有的样式清空
+            }
+            aLi[iNow==5?0:iNow].className = "select";   //这里加判断是为了点击向后按钮的时候避免aLi[5]为undefined
+            move = getMovelength(iNow);
+            oImgbox.style.left = -move + "px";
+        }
+        function getMovelength(iNow) {   //获取应该移动的距离
+            var length = 0;
+            for (var i = 0; i < iNow; i++) {
+                length += aImg[i].offsetWidth
+            }
+            return length;
+        }
+
+        var timer = setTimeout(function(){   //出现问题处，怀疑是定时器队列的问题但因为太抽象想不清楚该怎么解决
+            oRight.onclick();
+            setTimeout(arguments.callee,1000)
+        },1000)
+        
+    </script>
+</body>
+
+</html>

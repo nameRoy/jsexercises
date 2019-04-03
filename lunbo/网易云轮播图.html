@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>网易轮播图</title>
+</head>
+<style>
+    body{
+        margin: 0; 
+    }
+    #box{
+        width: 1460px;
+        height: 357px;
+        position: relative;
+        overflow: hidden;
+        margin: 0 auto;
+    }
+    div:not(#box){
+        width: 730px;
+        height: 336px;
+        background: linear-gradient(to right, red ,orange,yellow,green,lightblue,blue,violet);
+        position: absolute;
+        transition: all 0.5s linear;
+    }
+    .first{
+        left:0;
+        transform-origin: bottom left;
+        transform: scale(0.81);
+        z-index: -1;
+    }
+    .second{
+        left:365px;
+        z-index: 2;
+    }
+    .third{
+        left: 730px;
+        transform-origin: bottom right;
+        transform: scale(0.81);
+        z-index: 1;
+    }
+    .fourth{
+        left: 1095px;
+        transform-origin: bottom right;
+        transform: scale(0.81);
+        z-index: 0;
+    }
+    .fifth{
+        left: 1460px;
+        transform-origin: bottom right;
+        transform: scale(0.81);
+        z-index: 0;
+    }
+    .sixth{
+        left:1825px;
+        transform-origin: bottom right;
+        transform: scale(0.81);
+        z-index: 0;
+    }
+    .seventh{
+        left: 2190px;
+        transform-origin: bottom right;
+        transform: scale(0.81);
+        z-index: 0;
+    }
+    span#control{
+        position: absolute;
+        left: 47%;
+        top:336px;
+        transform: translate(-50%);
+        background: #cccccc;
+    }
+    span#back{
+        position: absolute;
+        left: 53%;
+        top:336px;
+        transform: translate(-50%);
+        background: #cccccc;
+    }
+</style>
+<body>
+    <div id="box">
+            <div class="first"></div>
+            <div class="second"></div>
+            <div class="third"></div>
+            <div class="fourth"></div>
+            <div class="fifth"></div>
+            <div class="sixth"></div>
+            <div class="seventh"></div>
+            <span id="control">向前</span>
+            <span id="back">向后</span>
+    </div>
+   
+    <script>
+        var oDiv = document.getElementById("box");
+        var aDiv = oDiv.getElementsByTagName("div");
+        var aClassname = new Array();
+        var oControl = document.getElementById("control");
+        var oBack = document.getElementById("back");
+        for(var i = 0;i<aDiv.length;i++){
+            aClassname.push(aDiv[i].className);
+        }
+        oControl.onclick = function(){
+            aClassname.unshift(aClassname.pop());
+            // aClassname.push(aClassname.shift());
+            for(var i = 0;i<aDiv.length;i++){
+                aDiv[i].className = aClassname[i];
+            }
+            // aClassname.push(aClassname.shift());
+        }
+        oBack.onclick = function(){
+            // aClassname.unshift(aClassname.pop());
+            aClassname.push(aClassname.shift());
+            for(var i = 0;i<aDiv.length;i++){
+                aDiv[i].className = aClassname[i];
+            }
+            // aClassname.push(aClassname.shift());
+        }
+    </script>
+</body>
+</html>
