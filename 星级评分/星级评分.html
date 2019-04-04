@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>星级评分</title>
+    <style>
+        #contain-star {
+            width: 500px;
+            height: 100px;
+            padding: 10px 5px;
+            background: #eee;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        #contain-star .star {
+            width: 100px;
+            height: 100px;
+            float: left;
+            list-style: none;
+        }
+
+        .lightAll {
+            background-image: url("五角星三图.png");
+            background-position: 0 0;
+            background-size: 100px 300px;
+        }
+
+        .lightHalf {
+            background-image: url("五角星三图.png");
+            background-position: 0 100px;
+            background-size: 100px 300px;
+        }
+
+        .noLight {
+            background-image: url("五角星三图.png");
+            background-position: 0 200px;
+            background-size: 100px 300px;
+        }
+        #pingjia{
+            font-size: 16px;
+            font-weight: 700;
+            width: 500px;
+            margin: 0 auto;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <ul id="contain-star">
+        <li class="star star1 noLight"></li>
+        <li class="star star2 noLight"></li>
+        <li class="star star3 noLight"></li>
+        <li class="star star4 noLight"></li>
+        <li class="star star5 noLight"></li>
+    </ul>
+    <div id="pingjia"></div>
+    <script>
+        var aStar = document.getElementsByClassName("star");//获取星星盒子
+        var oContainStar = document.getElementById("contain-star");//获取装有星星的容器盒子做事件委托
+        var oPingjia = document.getElementById("pingjia");
+        var lightStarNum = 0;//设置初始点亮的星星
+        var ok = 0;
+        oContainStar.onmousemove = function (e) {
+            var event = e || window.event;
+            var target = event.target || event.srcElement;
+            for (var i = 0; i < aStar.length; i++) {
+                if (target.tagName == "LI" && aStar[i].className == target.className) {
+                    lightStarNum = i;//获取应该点亮的星星索引
+                }
+            }
+            lightStar();
+        }
+
+        var clickhandle = false;//没点击
+        oContainStar.onclick = function (e) {
+            var event = e || window.event;
+            var target = event.target || event.srcElement;
+            for (var i = 0; i < aStar.length; i++) {
+                if (target.tagName == "LI" && aStar[i].className == target.className) {
+                    ok = i;  //确定点击时候应点亮的星星
+                }
+            }
+            clickhandle = true;  //告诉我已经点了
+        }
+
+        oContainStar.onmouseout = function () {
+            for (var i = 0; i < aStar.length; i++) {
+                aStar[i].className = "star star" + (i + 1) + " noLight";
+            }
+            for (var j = 0; j <= ok && clickhandle; j++) {
+                aStar[j].className = "star star" + (j + 1) + " lightAll";  //移出时确定点亮的个数
+            }
+            if (clickhandle) {
+                switch (ok) {
+                    case 0: oPingjia.innerHTML = "太差了别看了"; break;
+                    case 1: oPingjia.innerHTML = "就将就看看吧"; break;
+                    case 2: oPingjia.innerHTML = "还行可以一看"; break;
+                    case 3: oPingjia.innerHTML = "观感十足看啊"; break;
+                    case 4: oPingjia.innerHTML = "太好看了吧！看它！"; break;
+                }
+            }else{
+                oPingjia.innerHTML = ""; 
+            }
+
+        }
+
+        function lightStar() {  //点亮函数
+            for (var i = 0; i < aStar.length; i++) {
+                aStar[i].className = "star star" + (i + 1) + " noLight";
+            }
+            for (var j = 0; j <= lightStarNum; j++) {
+                aStar[j].className = "star star" + (j + 1) + " lightAll";
+            }
+
+            switch (lightStarNum) {
+                case 0: oPingjia.innerHTML = "太差了别看了"; break;
+                case 1: oPingjia.innerHTML = "就将就看看吧"; break;
+                case 2: oPingjia.innerHTML = "还行可以一看"; break;
+                case 3: oPingjia.innerHTML = "观感十足看啊"; break;
+                case 4: oPingjia.innerHTML = "太好看了吧！看它！"; break;
+            }
+        }
+
+
+
+    </script>
+</body>
+
+</html>
