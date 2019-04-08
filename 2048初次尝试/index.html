@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            position: relative;
+        }
+
+        #all {
+            width: 330px;
+            height: 330px;
+            background: #d8d052;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-150px, 170px);
+        }
+
+        .item {
+            width: 70px;
+            height: 70px;
+            background: #98955b;
+            position: absolute;
+            line-height: 70px;
+            text-align: center;
+            font-weight: bolder;
+            font-size: 0px;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="all"></div>
+    <script>
+        var oAll = document.getElementById("all");
+        document.onselectstart = function () { return false; };
+        (function () {//制作出16个单元格
+            for (var i = 0; i < 4; i++) {//4行循环
+                for (var j = 0; j < 4; j++) {//4列循环
+                    var oItem = document.createElement('div');
+                    oItem.className = "item item" + i + "-" + j;
+                    oAll.appendChild(oItem);
+                }
+            }
+        })();
+
+        (function () {//默认布局
+            for (var i = 0; i < 4; i++) {
+                for (var j = 0; j < 4; j++) {
+                    var everyItem = document.getElementsByClassName("item item" + i + "-" + j)[0];
+                    everyItem.style.left = (j + 1) * 10 + j * 70 + "px";//横着的布局
+                    everyItem.style.top = (i + 1) * 10 + i * 70 + "px";//竖着的不布局
+                    everyItem.innerHTML = "0";
+                }
+            }
+        })()
+
+        var flag = true;//规定初始为true 蹦出两个随机数;false时蹦一个数
+        var randNum = [2, 2, 2, 2, 4];  //初始值表
+        function creatRandNum() {
+            var idx = Math.floor(Math.random() * randNum.length)  //随机索引
+            var r = Math.floor(Math.random() * 4);//随机行
+            var c = Math.floor(Math.random() * 4);//随机列
+            var randEle = document.getElementsByClassName("item item" + r + "-" + c)[0];
+            for (var i = 0; i < 2 && flag; i++) {//开局随机获取两个数
+                var idx = Math.floor(Math.random() * randNum.length)  
+                var r = Math.floor(Math.random() * 4);
+                var c = Math.floor(Math.random() * 4);
+                var randEle = document.getElementsByClassName("item item" + r + "-" + c)[0];//通过随机行与列获取随机元素块
+                if (i == 0) {// 第一次因为没有值，默认都是0，随意填写
+                    randEle.innerHTML = randNum[idx];
+                    randEle.style.fontSize = "25px";
+                } else {  //第二次填写要填写为零的，如果不为零一直找直到找到为零的那个元素然后赋值
+                    while (randEle.innerHTML != 0) {
+                        var idx = Math.floor(Math.random() * randNum.length)  //随机索引
+                        var r = Math.floor(Math.random() * 4);
+                        var c = Math.floor(Math.random() * 4);
+                        var randEle = document.getElementsByClassName("item item" + r + "-" + c)[0];
+                    }
+                    randEle.innerHTML = randNum[idx];
+                    randEle.style.fontSize = "25px";
+                }
+            }
+
+            if (!flag) { //玩起来时随机蹦一个数
+                while (randEle.innerHTML != 0) {
+                    var idx = Math.floor(Math.random() * randNum.length)  //随机索引
+                    var r = Math.floor(Math.random() * 4);
+                    var c = Math.floor(Math.random() * 4);
+                    var randEle = document.getElementsByClassName("item item" + r + "-" + c)[0];
+                }
+                randEle.innerHTML = randNum[idx];
+                randEle.style.fontSize = "25px";
+            }
+            flag = false;
+        }
+        creatRandNum();
+
+        document.onmousedown = function (e) {
+            var e = e || window.event;
+            var pastPosition = [e.clientX, e.clientY];//获取刚开始点击的时候的鼠标位置
+            document.onmouseup = function (e) {
+                var nowPosition = [e.clientX, e.clientY]; //获取抬起来时鼠标位置
+                var xDvalue = nowPosition[0] - pastPosition[0];  //计算前后差值判断具体往哪面移动
+                var yDvalue = nowPosition[1] - pastPosition[1];
+                if (xDvalue > 0 && Math.abs(xDvalue) > Math.abs(yDvalue)) {//向右移动
+                    moveToRight();
+                } else if (xDvalue < 0 && Math.abs(xDvalue) > Math.abs(yDvalue)) {//向左移动
+                    moveToleft();
+                } else if (yDvalue > 0 && Math.abs(xDvalue) < Math.abs(yDvalue)) {//向下移动
+                    moveToBottom()
+                } else if (yDvalue < 0 && Math.abs(xDvalue) < Math.abs(yDvalue)) {//向上移动
+                    moveToUp();
+                }
+            }
+        }
+
+        document.onkeydown = function(e){  //绑定键盘事件 分别是左上右下方向键
+            var event = e || window.event;
+            
+            switch(event.keyCode){
+                case 37: moveToleft();break;
+                case 38: moveToUp();break;
+                case 39: moveToRight();break;
+                case 40: moveToBottom();break;
+            }
+        }
+
+        function moveToRight() {
+            var booFlag = false;//能不能蹦新的数字状态判定初始为false；当可以移动时为true
+            for (var i = 0; i < 4; i++) {
+                for (var j = 2; j > -1; j--) {
+                    var counter = 0;//计数器记录元素前面零的个数，初始为0个；
+                    var everyItem = document.getElementsByClassName("item item" + i + "-" + j)[0];
+                    if (everyItem.innerHTML == 0) {//取到的元素为0时去取下一个
+                        continue;
+                    }
+                    for (var k = j + 1; k <= 3; k++) {//根据前面元素0的个数确定位置
+                        var everyNextItem = document.getElementsByClassName("item item" + i + "-" + k)[0];
+                        if (everyNextItem.innerHTML == 0) {
+                            counter++;
+                        }
+                    }
+                    if (counter != 0) {//一旦counter不为零了说明发生移动 可以随机蹦一个数
+                        booFlag = true;
+                    }
+                    var everyItemMoveEnd = document.getElementsByClassName("item item" + i + "-" + (j + counter))[0];//获取移动后的位置元素
+                    everyItemMoveEnd.innerHTML = everyItem.innerHTML; //让移动后位置的值等于之前取到的值
+                    everyItemMoveEnd.style.fontSize = "25px";
+                    if (everyItem != everyItemMoveEnd) {
+                        everyItem.innerHTML = 0;
+                        everyItem.style.fontSize = "0px";
+                    }
+
+                    if (/-3$/.test(everyItemMoveEnd.className)) { //这是为了解决边界取不到nextSibling
+                    } else { //当不是边界时看看移动后的和前面那个元素一样不，一样就加起来，加完后移动后的归零
+                        if (everyItemMoveEnd.innerHTML == everyItemMoveEnd.nextElementSibling.innerHTML) {
+                            everyItemMoveEnd.nextElementSibling.innerHTML = parseInt(everyItemMoveEnd.innerHTML) + parseInt(everyItemMoveEnd.nextElementSibling.innerHTML);
+                            everyItemMoveEnd.innerHTML = 0;
+                            everyItemMoveEnd.style.fontSize = "0px";
+                        }
+                    }
+                }
+            }
+            if (booFlag) {//看看是否需要蹦一个数出来
+                creatRandNum();
+            }
+        }
+
+        //后几个同理就是循环的初始位置换了下，逻辑一样
+        
+        function moveToleft() {
+            var booFlag = false;//能不能蹦新的数字状态判定初始为true；
+            for (var i = 0; i < 4; i++) {
+                for (var j = 1; j < 4; j++) {
+                    var counter = 0;//计数器记录元素前面零的个数，初始为0个；
+                    var everyItem = document.getElementsByClassName("item item" + i + "-" + j)[0];
+                    if (everyItem.innerHTML == 0) {
+                        continue;
+                    }
+                    for (var k = j - 1; k >= 0; k--) {//计数当前不为零的元素前面0的个数
+                        var everyNextItem = document.getElementsByClassName("item item" + i + "-" + k)[0];
+                        if (everyNextItem.innerHTML == 0) {
+                            counter++;
+                        }
+                    }
+                    if (counter != 0) {
+                        booFlag = true;
+                    }
+                    var everyItemMoveEnd = document.getElementsByClassName("item item" + i + "-" + (j - counter))[0];
+                    everyItemMoveEnd.innerHTML = everyItem.innerHTML;
+                    everyItemMoveEnd.style.fontSize = "25px";
+                    if (everyItem != everyItemMoveEnd) {
+                        everyItem.innerHTML = 0;
+                        everyItem.style.fontSize = "0px";
+                    }
+
+                    if (/-0$/.test(everyItemMoveEnd.className)) {
+                    } else {
+                        if (everyItemMoveEnd.innerHTML == everyItemMoveEnd.previousElementSibling.innerHTML) {
+                            everyItemMoveEnd.previousElementSibling.innerHTML = parseInt(everyItemMoveEnd.innerHTML) + parseInt(everyItemMoveEnd.previousElementSibling.innerHTML);
+                            everyItemMoveEnd.innerHTML = 0;
+                            everyItemMoveEnd.style.fontSize = "0px";
+                        }
+                    }
+                }
+            }
+            if (booFlag) {
+                creatRandNum();
+            }
+        }
+
+        function moveToUp() {
+            var booFlag = false;//能不能蹦新的数字状态判定初始为true；
+            for (var i = 0; i < 4; i++) {
+                for (var j = 1; j < 4; j++) {
+                    var counter = 0;//计数器记录元素前面零的个数，初始为0个；
+                    var everyItem = document.getElementsByClassName("item item" + j + "-" + i)[0];
+                    if (everyItem.innerHTML == 0) {
+                        continue;
+                    }
+                    for (var k = j - 1; k >= 0; k--) {//计数当前不为零的元素前面0的个数
+                        var everyNextItem = document.getElementsByClassName("item item" + k + "-" + i)[0];
+                        if (everyNextItem.innerHTML == 0) {
+                            counter++;
+                        }
+                    }
+                    if (counter != 0) {
+                        booFlag = true;
+                    }
+                    var everyItemMoveEnd = document.getElementsByClassName("item item" + (j - counter) + "-" + i)[0];
+                    everyItemMoveEnd.innerHTML = everyItem.innerHTML;
+                    everyItemMoveEnd.style.fontSize = "25px";
+                    if (everyItem != everyItemMoveEnd) {
+                        everyItem.innerHTML = 0;
+                        everyItem.style.fontSize = "0px";
+                    }
+                    if (/0-[0123]$/.test(everyItemMoveEnd.className)) {
+                    } else {
+                        var upEle = everyItemMoveEnd.previousElementSibling.previousElementSibling.previousElementSibling.previousElementSibling;
+                        if (everyItemMoveEnd.innerHTML == upEle.innerHTML) {
+                            
+                            upEle.innerHTML = parseInt(everyItemMoveEnd.innerHTML) + parseInt(upEle.innerHTML);
+                            everyItemMoveEnd.innerHTML = 0;
+                            everyItemMoveEnd.style.fontSize = "0px";
+                        }
+                    }
+                }
+            }
+            if (booFlag) {
+                creatRandNum();
+            }
+        }
+
+        function moveToBottom() {
+            var booFlag = false;//能不能蹦新的数字状态判定初始为true；
+            for (var i = 0; i < 4; i++) {
+                for (var j = 2; j >= 0; j--) {
+                    var counter = 0;//计数器记录元素前面零的个数，初始为0个；
+                    var everyItem = document.getElementsByClassName("item item" + j + "-" + i)[0];
+                    if (everyItem.innerHTML == 0) {
+                        continue;
+                    }
+                    for (var k = j + 1; k <= 3; k++) {//计数当前不为零的元素前面0的个数
+                        var everyNextItem = document.getElementsByClassName("item item" + k + "-" + i)[0];
+                        if (everyNextItem.innerHTML == 0) {
+                            counter++;
+                        }
+                    }
+                    if (counter != 0) {
+                        booFlag = true;
+                    }
+                    var everyItemMoveEnd = document.getElementsByClassName("item item" + (j + counter) + "-" + i)[0];
+                    everyItemMoveEnd.innerHTML = everyItem.innerHTML;
+                    everyItemMoveEnd.style.fontSize = "25px";
+                    if (everyItem != everyItemMoveEnd) {
+                        everyItem.innerHTML = 0;
+                        everyItem.style.fontSize = "0px";
+                    }
+                    if (/3-[0123]$/.test(everyItemMoveEnd.className)) {
+                    } else {
+                        var downEle = everyItemMoveEnd.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling;
+    
+                        if (everyItemMoveEnd.innerHTML == downEle.innerHTML) {
+                            
+                            downEle.innerHTML = parseInt(everyItemMoveEnd.innerHTML) + parseInt(downEle.innerHTML);
+                            everyItemMoveEnd.innerHTML = 0;
+                            everyItemMoveEnd.style.fontSize = "0px";
+                        }
+                    }
+                }
+            }
+            if (booFlag) {
+                creatRandNum();
+            }
+        }
+    </script>
+</body>
+
+</html>
