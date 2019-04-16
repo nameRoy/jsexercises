@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <style>
+        .red {
+            background: #ff0000;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="app">
+        <h1 class="text-center">todolist</h1>
+        <form action="">
+            <div class="form-group" style="width:968px; margin:20px auto; text-align:center">
+                <input type="text" class="form-control" style="display: inline;width: 270px"
+                    placeholder="请输入商品名称" v-model="message" @focus="search(message)" @blur="search(message)"><button class="glyphicon glyphicon-search btn btn-default"
+                    style="margin-top: -4px" @click.prevent="search(message)">搜索</button>
+            </div>
+            <div class="form-group" style="width:968px; margin:20px auto; text-align:center">
+                <label for="">商品名称</label><input type="text" placeholder="添加的商品名称" class="form-control"
+                    style="display: inline;width: 270px" v-model="addmessage"> <label for="">商品价格</label><input type="text"
+                    placeholder="添加的商品价格" class="form-control" style="display: inline;width: 270px" v-model.number="addprice"><button
+                    class="glyphicon glyphicon-plus btn btn-default" style="margin-top: -4px" @click.prevent="add()">添加</button>
+            </div>
+        </form>
+        <table class="table table-bordered text-center">
+            <thead>
+                <td>选择</td>
+                <td>商品名称</td>
+                <td>商品价格</td>
+                <td>删除</td>
+            </thead>
+            <tbody>
+                <tr v-for="(item, index) in productList" :key="index" @click="togglered(item)"
+                    :class="{red:item.isRed}" v-if="item.show">
+                    <td><input type="checkbox" v-model="item.deleteclick"></td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.price}}</td>
+                    <td><button type="button" class="btn btn-warning glyphicon glyphicon-remove btn-xs"
+                            @click="change(index)"></button></td>
+                </tr>
+                <tr>
+                    <td><button type="button" class="btn btn-danger btn-xs" @click="deleteSelect()">删除选中</button></td>
+                    <td colspan="3">总价是:{{Total}}元</td>
+                </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+
+
+    <script src="vue.js"></script>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                productList: [
+                    {
+                        name: '衣服',
+                        price: 123,
+                        isRed: false,
+                        deleteclick: false,
+                        show:true,
+                    }, {
+                        name: '裤子',
+                        price: 234,
+                        isRed: false,
+                        deleteclick: false,
+                        show:true,
+                    }, {
+                        name: '手机',
+                        price: 8888,
+                        isRed: false,
+                        deleteclick: false,
+                        show:true,
+                    }, {
+                        name: '鞋',
+                        price: 777,
+                        isRed: false,
+                        deleteclick: false,
+                        show:true,
+                    }
+                ], total: 0,message:"",addmessage:"",addprice:""
+            }, methods: {
+                togglered(item) {
+                    if (event.target.tagName !== "BUTTON") {
+                        item.isRed = !item.isRed;
+                    }
+                },
+                change(idx) {
+                    this.productList.splice(idx, 1);
+                },
+                deleteSelect() {
+                    for (var i = 0; i < this.productList.length; i++) {
+                        if (this.productList[i].deleteclick) {
+                            this.productList.splice(i, 1);
+                            i = -1;
+                        }
+                    }
+                },
+                search(m){
+                    for(var i = 0;i<this.productList.length;i++){
+                        if(this.message!=""&&this.productList[i].name.indexOf(m)==-1){
+                            this.productList[i].show=false;
+                        }else{
+                            this.productList[i].show=true;
+                        }
+                    }
+                },
+                add(){
+                    var rowE = new Object();
+                    rowE.isRed=false;
+                    rowE.deleteclick=false;
+                    rowE.show=true;
+                    rowE.name=this.addmessage;
+                    rowE.price=this.addprice;
+                    this.productList.push(rowE)
+                    this.addmessage="";
+                    this.addprice="";
+                }
+            },
+            computed: {
+                Total() {
+                    this.total = 0;
+                    for (var i = 0; i < this.productList.length; i++) {
+                        if (this.productList[i].isRed || this.productList[i].deleteclick) {
+                            this.total += this.productList[i].price
+                        }
+                    }
+                    return this.total;
+                }
+            }
+        });
+    </script>
+
+</body>
+
+</html>
