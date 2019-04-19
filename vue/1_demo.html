@@ -96,6 +96,7 @@
                 togglered(item) {
                     if (event.target.tagName !== "BUTTON") {
                         item.isRed = !item.isRed;
+                        item.deleteclick=!item.deleteclick;
                     }
                 },
                 change(idx) {
@@ -119,6 +120,9 @@
                     }
                 },
                 add(){
+                    if(this.addmessage==""||this.addprice==""){
+                        return;
+                    }
                     var rowE = new Object();
                     rowE.isRed=false;
                     rowE.deleteclick=false;
@@ -134,7 +138,7 @@
                 Total() {
                     this.total = 0;
                     for (var i = 0; i < this.productList.length; i++) {
-                        if (this.productList[i].isRed || this.productList[i].deleteclick) {
+                        if (this.productList[i].show&&(this.productList[i].isRed || this.productList[i].deleteclick)) {
                             this.total += this.productList[i].price
                         }
                     }
